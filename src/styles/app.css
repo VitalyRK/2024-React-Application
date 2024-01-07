@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.main {
+  margin: 50px auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 30px;
+  gap: 20px;
+}
+
+.Posts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.remove-btn {
+  margin-right: 0.5rem;
+}
+
+.post-enter {
+  transform: translateX(-350px);
+}
+
+.post-enter-active {
+  transform: translateX(0px);
+  transition: all 500ms ease-in;
+}
+
+.post-exit {
+  opacity: 1;
+}
+
+.post-exit-active {
+  transform: translateX(-350px);
+  transition: all 500ms ease-in;
+}
+
+.pagination {
+  width: 100%;
+  max-width: fit-content;
+  margin: 30px auto 50px;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.pagination button {
+  width: 50px;
+}
+
+.pagination button:disabled,
+.pagination button[disabled] {
+  background-color: #eeeeee;
+  font-weight: 600;
+  color: #004646;
+  pointer-events: none;
+  border-color: rgb(240, 157, 157);
+}

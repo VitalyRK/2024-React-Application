@@ -1,0 +1,6 @@
+.myFilter {
+  display: flex;
+  margin: 30px;
+  gap: 30px;
+  justify-content: center;
+}

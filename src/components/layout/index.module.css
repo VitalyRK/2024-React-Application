@@ -1,0 +1,11 @@
+.header {
+  width: 100%;
+  padding-right: 100px;
+  background-color: chocolate;
+  height: 70px;
+  display: flex;
+  gap: 15px;
+  justify-content: right;
+  align-items: center;
+  font-size: 22px;
+}
