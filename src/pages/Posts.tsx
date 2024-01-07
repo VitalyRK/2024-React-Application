@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import PostService from '@/API/PostService';
 import Counter from '@/components/counter/Counter';
@@ -9,7 +9,9 @@ import MyButton from '@/components/UI/button/MyButton';
 import Loader from '@/components/UI/loader/Loader';
 import MyModal from '@/components/UI/modal/MyModal';
 import Pagination from '@/components/UI/pagination/Pagination';
+import MySelect from '@/components/UI/select/MySelect';
 import { useFetching } from '@/hooks/useFetching';
+import { useObserver } from '@/hooks/useObserver';
 import { usePagination } from '@/hooks/usePagination';
 import { usePosts } from '@/hooks/usePost';
 import { getPageCount } from '@/utils/pages';
@@ -35,11 +37,12 @@ function Posts() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const lastElement = useRef<HTMLDivElement | null>(null);
 
   const [fetchPosts, isPostsLoading, postError] = useFetching(
     async (limit, page) => {
       const response = await PostService.getAll(limit, page);
-      setPosts(response.data);
+      setPosts([...posts, ...response.data]);
       const totalCount = response.headers['x-total-count'];
       setTotalPages(getPageCount(totalCount, limit));
     }
@@ -50,9 +53,13 @@ function Posts() {
     setModal(false);
   };
 
+  useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+    setPage(page + 1);
+  });
+
   useEffect(() => {
     fetchPosts(limit, page);
-  }, []);
+  }, [page, limit]);
 
   const pagesArray = usePagination(totalPages);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
@@ -67,7 +74,6 @@ function Posts() {
 
   const changePage = (page: number) => {
     setPage(page);
-    fetchPosts(limit, page);
   };
 
   // const bodyInputRef = useRef<HTMLInputElement | null>(null);
@@ -82,8 +88,20 @@ function Posts() {
       <MyButton onClick={() => setModal(true)}>Create post</MyButton>
 
       <PostFilter filter={filter} setFilter={setFilter} />
+      <MySelect
+        value={limit.toString()}
+        onChange={(value) => setLimit(+value)}
+        options={[
+          { value: '5', name: '5' },
+          { value: '10', name: '10' },
+          { value: '25', name: '25' },
+          { value: '-1', name: 'Show all' },
+        ]}
+        defaultValue={'Quantity on page'}
+      />
       {postError && <h1>There is an ERROR!</h1>}
       <PostsList posts={sortedAndSearchedPosts} remove={removePost} />
+      <div ref={lastElement}></div>
       {isPostsLoading && <Loader />}
       <Pagination page={page} changePage={changePage} pagesArray={pagesArray} />
     </div>

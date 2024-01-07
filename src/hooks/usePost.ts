@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { IPosts } from '@/App';
+import { IPosts } from '@/pages/Posts';
 
 export const useSortedPosts = (posts: IPosts[], sort: string) => {
   const sortedPosts = useMemo(() => {
